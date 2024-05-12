@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wisielec</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        pre {
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Wisielec</h1>
+        <h3>Kamil Kowalczyk</h3>
+        <h3>Denis Stanek</h3>
+        
+        <pre>{{ hangman_image }}</pre>
+        
+        <p class="lead">
+            {% for letter in word %}
+                {% if letter in guessed_letters %}
+                    {{ letter }}
+                {% else %}
+                    _
+                {% endif %}
+            {% endfor %}
+        </p>
+        
+        <p>
+            Użyte litery:
+            {% for letter in guessed_letters %}
+                {% if letter in word %}
+                    <span class="text-success">{{ letter }}</span>
+                {% else %}
+                    <span class="text-danger">{{ letter }}</span>
+                {% endif %}
+            {% endfor %}
+        </p>
+        
+        {% if game_state == "play" %}
+            <form method="POST" action="/">
+                <div class="mb-3">
+                    <label for="letter" class="form-label">Wybierz literę:</label>
+                    <input type="text" id="letter" name="letter" class="form-control" maxlength="1" pattern="[A-Za-z]" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sprawdź</button>
+            </form>
+        {% elif game_state == "win" %}
+            <div class="alert alert-success mt-4" role="alert">
+                Gratulacje! Wygrałeś!
+            </div>
+            <form method="POST" action="/">
+                <input type="hidden" name="action" value="new_game">
+                <button type="submit" class="btn btn-secondary mt-3">Nowa gra</button>
+            </form>
+        {% elif game_state == "lose" %}
+            <div class="alert alert-danger mt-4" role="alert">
+                Przegrałeś! Prawidłowe słowo to: {{ word }}
+            </div>
+            <form method="POST" action="/">
+                <input type="hidden" name="action" value="new_game">
+                <button type="submit" class="btn btn-secondary mt-3">Nowa gra</button>
+            </form>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
